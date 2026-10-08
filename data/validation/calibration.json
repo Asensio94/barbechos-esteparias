@@ -1,0 +1,51 @@
+{
+ "spring_max": 0.3,
+ "summer_max": 0.35,
+ "fit_years": [
+  2018,
+  2019,
+  2020
+ ],
+ "test_years": [
+  2021,
+  2022
+ ],
+ "fit": {
+  "n": 293,
+  "r": 0.89,
+  "bias_pct": -8.2,
+  "rmse_ha": 852.0,
+  "mae_pct": 31.4
+ },
+ "test": {
+  "n": 206,
+  "r": 0.937,
+  "bias_pct": -3.4,
+  "rmse_ha": 638.0,
+  "mae_pct": 26.3
+ },
+ "fit_change": {
+  "n": 169,
+  "r": 0.059,
+  "same_sign_pct": 46.7
+ },
+ "test_change": {
+  "n": 103,
+  "r": 0.639,
+  "same_sign_pct": 61.2
+ },
+ "all_change": {
+  "n": 374,
+  "r": 0.091,
+  "same_sign_pct": 52.1
+ },
+ "wobble_pct": 9.9,
+ "ratio_by_year": {
+  "2018": 0.937,
+  "2019": 1.066,
+  "2020": 0.77,
+  "2021": 0.916,
+  "2022": 1.014
+ },
+ "spring_stat": 50
+}
