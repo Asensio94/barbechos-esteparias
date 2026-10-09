@@ -1,6 +1,8 @@
 # Barbechos y aves esteparias
 
-Superficie de barbecho por comarca agraria en Aragón y Castilla y León, campaña a campaña, medida con imágenes Sentinel-2 y contrastada con la PAC y con el Anuario del Ministerio de Agricultura. El barbecho es el hábitat de la ganga, la ortega, el sisón y la avutarda, y su caída explica buena parte de la de estas aves. Web: <https://asensio94.github.io/barbechos-esteparias/>
+Superficie de barbecho por comarca agraria en Aragón y Castilla y León, campaña a campaña, medida con imágenes Sentinel-2 y contrastada con la PAC y con el Anuario del Ministerio de Agricultura. El barbecho es el hábitat de la ganga, la ortega, el sisón y la avutarda, y su caída explica buena parte de la de estas aves.
+
+> **Estado: aparcado (octubre de 2026).** La calibración con la PAC de Aragón muestra que el satélite acierta el nivel de barbecho y su reparto, pero no el cambio de un año a otro (ver *Contraste*). Para el efecto de la PAC año a año, la declaración es mejor fuente. El método se retomaría donde no hay dato oficial fino: comarcas de Castilla y León, ZEPA esteparias y tendencias de varios años. Solo está procesado el bloque de calibración del valle del Ebro (2018-2022). El flujo de Actions no tiene ejecución programada.
 
 ## Cómo funciona
 

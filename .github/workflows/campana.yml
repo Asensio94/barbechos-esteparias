@@ -3,9 +3,10 @@ name: Campaña de barbecho
 # Una pasada por campaña. La campaña acaba el 31 de agosto y las últimas escenas tardan unos
 # días en llegar al catálogo, así que se lanza a mediados de septiembre. A mano sirve para
 # rehacer una campaña anterior o una sola comunidad.
+# Proyecto aparcado: sin ejecución programada. Para reactivarlo, volver a poner
+#   schedule:
+#     - cron: "0 5 15 9 *"
 on:
-  schedule:
-    - cron: "0 5 15 9 *"
   workflow_dispatch:
     inputs:
       year:
