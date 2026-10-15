@@ -247,7 +247,7 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
 
 <section class="bloque" id="officiel">
   <h2>Face aux chiffres officiels</h2>
-  <p class="note">Jachère déclarée dans le RPG par département (ligne de couleur) et celle de la Statistique agricole annuelle d’Agreste (tirets), en hectares. La SAA estime toute la surface agricole, y compris celle qui n’est pas déclarée à la PAC ; on s’attend donc à ce qu’elle soit un peu au-dessus, et à ce que les deux bougent ensemble.</p>
+  <p class="note">Jachère déclarée dans le RPG par département (ligne de couleur) et celle de la Statistique agricole annuelle d’Agreste (tirets), en hectares. La SAA estime toute la surface agricole, y compris celle qui n’est pas déclarée à la PAC, à partir d’enquêtes et de l’avis des services départementaux ; le RPG compte ce que les exploitants déclarent sous le code jachère. Les deux ne tombent donc pas sur le même chiffre, et l’écart n’a pas le même signe partout. __ECART_SAA__ Ce qui compte ici, c’est que les deux courbes bougent ensemble.</p>
   <div class="provincias" id="provincias"></div>
 </section>
 
@@ -442,6 +442,23 @@ pintar(); panel(); tablaZps();
 """
 
 
+def _saa_gap(deps: dict, year: int) -> str:
+    """One sentence on how far the RPG sits from the SAA, by department, in the given year."""
+    gaps = {d: 100 * (v["y"][year][0] / v["saa"][year] - 1) for d, v in deps.items()
+            if year in v["y"] and v["saa"].get(year)}
+    if not gaps:
+        return ""
+    lo, hi = min(gaps, key=gaps.get), max(gaps, key=gaps.get)
+    near = sum(1 for g in gaps.values() if abs(g) <= 11)
+
+    def sg(g: float) -> str:
+        return ("+" if g >= 0 else "−") + _p(abs(g), 0)
+
+    return (f"En {year}, la jachère du RPG va de {sg(gaps[lo])} ({deps[lo]['name']}) à {sg(gaps[hi])} "
+            f"({deps[hi]['name']}) par rapport à la SAA ; {near} départements sur {len(gaps)} restent "
+            f"à {_p(11, 0)} près.")
+
+
 def build() -> Path:
     d = build_data()
     com, pra, zps = d.pop("_com"), d.pop("_pra"), d.pop("_zps")
@@ -465,6 +482,7 @@ def build() -> Path:
             .replace("__NPRA__", str(sum(1 for p in d["pra"].values()
                                          if (p["y"].get(last) or [0, 0])[1] >= MIN_ARABLE_HA)))
             .replace("__MINZPS__", _n(MIN_ARABLE_HA))
+            .replace("__ECART_SAA__", _saa_gap(d["deps"], last))
             .replace("__FUENTES__", _sources())
             .replace("__BOX_TITLE__", box["title"]).replace("__BOX_BODY__", box["body"])
             .replace("__BOX_LINK__", box["link"])
