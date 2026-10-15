@@ -310,6 +310,7 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
     <li><a href="https://asensio94.github.io/grafo-promotores/">Grafo de promotores</a></li>
     <li><a href="https://asensio94.github.io/cartera-cotizadas/">Cartera de las cotizadas</a></li>
     <li><a href="https://asensio94.github.io/cuaderno-campo/">Cuaderno de campo</a></li>
+    <li><a href="https://asensio94.github.io/acuiferos-francia/">Acuíferos de Francia</a></li>
     <li aria-current="page"><a href="https://asensio94.github.io/barbechos-esteparias/">Barbechos y aves esteparias</a></li>
   </ul></nav>
 </footer>
