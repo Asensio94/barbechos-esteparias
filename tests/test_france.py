@@ -5,7 +5,7 @@ import pandas as pd
 from shapely.geometry import box
 
 from fallow import config, i18n
-from fallow.france import aggregate, saa, units, wfs
+from fallow.france import aggregate, rpg, saa, units, wfs
 
 
 def test_french_typography():
@@ -74,3 +74,14 @@ def test_saa_parse():
 def test_study_areas_cover_departments():
     in_areas = {d for _, deps in config.FR_AREAS.values() for d in deps}
     assert in_areas == set(config.FR_DEPARTMENTS)
+
+
+def test_rpg_fields_follow_each_campaign_schema(monkeypatch):
+    schemas = {
+        "RPG.2022:parcelles_graphiques": {"id_parcel": "xsd:string", "the_geom": "gml:MultiSurfacePropertyType"},
+        "RPG.LATEST:parcelles_graphiques": {"num_parcel": "xsd:string", "num_ilot": "xsd:string",
+                                            "geom": "gml:MultiSurfacePropertyType"},
+    }
+    monkeypatch.setattr(wfs, "schema", schemas.__getitem__)
+    assert rpg.fields("RPG.2022:parcelles_graphiques") == ("id_parcel", "the_geom")
+    assert rpg.fields("RPG.LATEST:parcelles_graphiques") == ("num_parcel", "geom")

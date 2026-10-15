@@ -40,14 +40,22 @@ def _tile_path(year: int, b: tuple[int, int, int, int]):
     return config.CACHE / "rpg" / str(year) / f"{b[0] // 1000}_{b[1] // 1000}.csv.gz"
 
 
-def _parcels(feats: list[dict]) -> pd.DataFrame:
+def fields(layer: str) -> tuple[str, str]:
+    """(parcel id field, geometry field) of a campaign layer."""
+    sch = wfs.schema(layer)
+    geom = next(k for k, t in sch.items() if t.startswith("gml:") and "Surface" in t)
+    ident = next(k for k in ("id_parcel", "num_parcel") if k in sch)
+    return ident, geom
+
+
+def _parcels(feats: list[dict], ident: str) -> pd.DataFrame:
     rows = []
     for f in feats:
         if not f.get("geometry"):
             continue
         p = f["properties"]
         pt = shape(f["geometry"]).representative_point()
-        rows.append((p["id_parcel"], p["code_group"], p["code_cultu"], p["surf_parc"],
+        rows.append((str(p[ident]), p["code_group"], p["code_cultu"], p["surf_parc"],
                      round(pt.x), round(pt.y)))
     return pd.DataFrame(rows, columns=COLUMNS)
 
@@ -56,9 +64,10 @@ def fetch_tile(year: int, layer: str, b: tuple[int, int, int, int]) -> int:
     path = _tile_path(year, b)
     if path.exists():
         return -1
-    feats = wfs.features(layer, bbox=b, properties="id_parcel,surf_parc,code_cultu,code_group,geom",
-                         sort_by="id_parcel")
-    df = _parcels(feats)
+    ident, geom = fields(layer)
+    feats = wfs.features(layer, bbox=b, properties=f"{ident},surf_parc,code_cultu,code_group,{geom}",
+                         sort_by=ident)
+    df = _parcels(feats, ident)
     # The bbox filter returns every parcel that touches the tile: keep only those whose
     # interior point falls inside it, so each parcel belongs to exactly one tile.
     df = df[(df.x >= b[0]) & (df.x < b[2]) & (df.y >= b[1]) & (df.y < b[3])]

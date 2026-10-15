@@ -73,3 +73,12 @@ def rpg_layers() -> dict[int, str]:
     if m and int(m.group(1)) not in out:
         out[int(m.group(1))] = "RPG.LATEST:parcelles_graphiques"
     return {y: t for y, t in sorted(out.items()) if y >= config.FR_FIRST_YEAR}
+
+
+@lru_cache(maxsize=None)
+def schema(type_name: str) -> dict[str, str]:
+    """Field name -> XML type of a layer. The RPG schema changes between campaigns: the
+    geometry is "the_geom" in 2022, and RPG.LATEST numbers parcels with num_parcel."""
+    xml = get(config.FR_WFS, {"service": "WFS", "version": "2.0.0", "request": "DescribeFeatureType",
+                              "typeNames": type_name}).text
+    return dict(re.findall(r'<xsd:element[^>]*?name="(\w+)"[^>]*?type="([^"]+)"', xml))
