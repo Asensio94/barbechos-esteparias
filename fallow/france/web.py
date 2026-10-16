@@ -382,10 +382,7 @@ function grafica(serie, extra, unidad){
   return s + "</svg>";
 }
 
-function total(){
-  const t = {}; for (const a of Object.values(D.areas)) for (const [y, v] of Object.entries(a.y)) { t[y] = t[y] || [0,0]; t[y][0] += v[0]; t[y][1] += v[1]; }
-  return t;
-}
+function total(){ return D.total; }  // rounded once in Python, so it matches the header
 function panel(){
   const y = +selA.value, p = document.getElementById("panel");
   let s, titulo, sub;
@@ -467,6 +464,7 @@ def build() -> Path:
     years = d["years"]
     last, first = years[-1], years[0]
     tot = com.groupby("year")[["fallow_ha", "arable_ha"]].sum()
+    d["total"] = {int(y): [round(r.fallow_ha), round(r.arable_ha)] for y, r in tot.iterrows()}
     f1, a1 = tot.loc[last]
     f0 = tot.loc[first, "fallow_ha"]
     change = 100 * (f1 / f0 - 1) if f0 and last > first else None
