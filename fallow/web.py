@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 from shapely.ops import unary_union
 
-from . import aggregate, config, geo
+from . import aggregate, config, geo, i18n
 from .logo import LOGO_SVG, favicon_link
 
 COMMON_CSS = Path(__file__).with_name("common.css").read_text(encoding="utf-8").strip()
@@ -161,6 +161,7 @@ PLANTILLA = r"""<!doctype html>
 __FAVICON__
 <title>Barbechos y aves esteparias</title>
 <meta name="description" content="Superficie de barbecho por comarca agraria en Aragón y Castilla y León, medida cada campaña con Sentinel-2 y contrastada con la PAC y el Anuario del MAPA.">
+<link rel="alternate" hreflang="fr" href="fr/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -215,6 +216,9 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
 .method > div > h3:first-child{margin-top:0}
 .method table.params th{white-space:normal;width:30%}
 .method table.valid th{width:auto}
+.fuentes{border:1.5px solid var(--accent);padding:14px 16px;background:var(--paper)}
+.fuentes h2{margin:0 0 8px;font:700 22px/1.1 var(--font-title);text-transform:uppercase;letter-spacing:.03em}
+.fuentes p{margin:0 0 10px;max-width:90ch}
 .aviso{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
 .site-footer p{margin:0}
 @media (max-width:900px){main,.method,.dos{grid-template-columns:1fr}}
@@ -224,7 +228,7 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
 <header class="site-header">
   <div class="marca">
     <h1>__LOGO__Barbechos <span>y aves esteparias</span></h1>
-    <span class="label">Aragón y Castilla y León · Sentinel-2 · una cifra por campaña</span>
+    <span class="label">Aragón y Castilla y León · Sentinel-2 · una cifra por campaña · <a href="fr/" hreflang="fr" lang="fr">Version française</a></span>
   </div>
   <p class="lede">El barbecho es la casa de la ganga, la ortega, el sisón y la avutarda: tierra de cultivo que un año descansa sin sembrar. Aquí se mide cuánto queda, comarca a comarca y campaña a campaña, con imágenes de satélite y reglas fijas, y se pone al lado de los cambios de la PAC que lo empujan arriba o abajo.</p>
   <div class="figures">
@@ -253,6 +257,14 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
   <h2>Frente a las cifras oficiales</h2>
   <p class="note">Barbecho estimado por provincia (línea de color) y el que da el Anuario de Estadística del MAPA (discontinua), en hectáreas. En Aragón, también lo declarado en la PAC (puntos grises). Las tres cifras no miden exactamente lo mismo: el Anuario incluye «otras tierras no ocupadas» y la PAC solo lo que se declara.</p>
   <div class="provincias" id="provincias"></div>
+</section>
+
+<section class="bloque" id="fuentes-fr">
+  <div class="fuentes">
+    <h2>__BOX_TITLE__</h2>
+    __BOX_BODY__
+    <p>__BOX_LINK__</p>
+  </div>
 </section>
 
 <section class="bloque" id="por-que">
@@ -466,6 +478,9 @@ def build() -> Path:
             .replace("__CUOTA__", f"{_es(100 * ult[0] / ult[1])} %" if ult and ult[1] else "—")
             .replace("__NCOM__", str(len(d["comarcas"])))
             .replace("__MAPW__", str(MAP_WIDTH)).replace("__MAPH__", str(d["map"]["height"]))
+            .replace("__BOX_TITLE__", i18n.SOURCES_BOX["es"]["title"])
+            .replace("__BOX_BODY__", i18n.SOURCES_BOX["es"]["body"])
+            .replace("__BOX_LINK__", i18n.SOURCES_BOX["es"]["link"])
             .replace("__PARAMETROS__", _parametros(cal))
             .replace("__VALIDACION__", _validacion(cal))
             .replace("__DATOS__", json.dumps(d, ensure_ascii=False, separators=(",", ":"))))

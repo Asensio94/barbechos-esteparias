@@ -6,6 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cstyle%3E.b%7Bfill%3A%23221d1a%7D.p%7Bfill%3A%237c4a2d%7D.l%7Bstroke%3A%23221d1a%7D%40media%20%28prefers-color-scheme%3Adark%29%7B.b%7Bfill%3A%23ede6e0%7D.p%7Bfill%3A%23d9a07a%7D.l%7Bstroke%3A%23ede6e0%7D%7D%3C/style%3E%3Cg%20class%3D%22b%22%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%2231%22%20r%3D%2219%22/%3E%3Cpath%20d%3D%22M19%2040%207%2050.5l3.5%204L25%2046z%22/%3E%3Cpath%20d%3D%22M52%2022l8%202.5-8%202.5z%22/%3E%3C/g%3E%3Cpath%20class%3D%22p%22%20d%3D%22M34%2012a19%2019%200%200%201%2015%2030.8C42%2041%2037%2034%2037%2026c0-6%201.5-10.5%204-12.6A19%2019%200%200%200%2034%2012z%22/%3E%3Cg%20fill%3D%22%23221d1a%22%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2221.5%22%20r%3D%222.1%22/%3E%3C/g%3E%3Cpath%20class%3D%22l%22%20d%3D%22M31%2049.5V60m7-11v11m-10.5.2h6m1.5%200h6%22%20fill%3D%22none%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
 <title>Barbechos y aves esteparias</title>
 <meta name="description" content="Superficie de barbecho por comarca agraria en Aragón y Castilla y León, medida cada campaña con Sentinel-2 y contrastada con la PAC y el Anuario del MAPA.">
+<link rel="alternate" hreflang="fr" href="fr/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -141,6 +142,9 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
 .method > div > h3:first-child{margin-top:0}
 .method table.params th{white-space:normal;width:30%}
 .method table.valid th{width:auto}
+.fuentes{border:1.5px solid var(--accent);padding:14px 16px;background:var(--paper)}
+.fuentes h2{margin:0 0 8px;font:700 22px/1.1 var(--font-title);text-transform:uppercase;letter-spacing:.03em}
+.fuentes p{margin:0 0 10px;max-width:90ch}
 .aviso{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
 .site-footer p{margin:0}
 @media (max-width:900px){main,.method,.dos{grid-template-columns:1fr}}
@@ -150,7 +154,7 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
 <header class="site-header">
   <div class="marca">
     <h1><svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="currentColor"><circle cx="34" cy="31" r="19"/><path d="M19 40 7 50.5l3.5 4L25 46z"/><path d="M52 22l8 2.5-8 2.5z"/></g><path class="logo-breast" d="M34 12a19 19 0 0 1 15 30.8C42 41 37 34 37 26c0-6 1.5-10.5 4-12.6A19 19 0 0 0 34 12z"/><g fill="#221d1a"><circle cx="45" cy="21.5" r="2.1"/></g><path d="M31 49.5V60m7-11v11m-10.5.2h6m1.5 0h6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Barbechos <span>y aves esteparias</span></h1>
-    <span class="label">Aragón y Castilla y León · Sentinel-2 · una cifra por campaña</span>
+    <span class="label">Aragón y Castilla y León · Sentinel-2 · una cifra por campaña · <a href="fr/" hreflang="fr" lang="fr">Version française</a></span>
   </div>
   <p class="lede">El barbecho es la casa de la ganga, la ortega, el sisón y la avutarda: tierra de cultivo que un año descansa sin sembrar. Aquí se mide cuánto queda, comarca a comarca y campaña a campaña, con imágenes de satélite y reglas fijas, y se pone al lado de los cambios de la PAC que lo empujan arriba o abajo.</p>
   <div class="figures">
@@ -179,6 +183,14 @@ ol.politica b{font-family:var(--font-data);color:var(--accent)}
   <h2>Frente a las cifras oficiales</h2>
   <p class="note">Barbecho estimado por provincia (línea de color) y el que da el Anuario de Estadística del MAPA (discontinua), en hectáreas. En Aragón, también lo declarado en la PAC (puntos grises). Las tres cifras no miden exactamente lo mismo: el Anuario incluye «otras tierras no ocupadas» y la PAC solo lo que se declara.</p>
   <div class="provincias" id="provincias"></div>
+</section>
+
+<section class="bloque" id="fuentes-fr">
+  <div class="fuentes">
+    <h2>España y Francia: dos fuentes distintas</h2>
+    <p>En España el barbecho se <b>estima con satélite</b>: es la tierra de cultivo que no verdea ni en primavera ni en verano, contada con reglas fijas sobre Sentinel-2. En Francia se <b>lee de la declaración de la PAC</b>: el Registro Parcelario Gráfico (RPG) publica cada año cada parcela con el cultivo que declaró el agricultor, y se suman las declaradas como barbecho («jachère»).</p><p>Las dos cifras no son intercambiables. La española cuenta toda tierra que no se siembra en la campaña, se declare como se declare: también el barbecho de «año y vez» de los secanos. La francesa cuenta lo que se declara como barbecho, incluido el de larga duración (seis años o más), y no ve un rastrojo que se deja sin sembrar si se declara con otro cultivo. La francesa no tiene error de medida, pero depende de lo que la norma de la PAC llama barbecho cada año; la española no depende de la declaración, pero oscila con la lluvia. Compárense las tendencias de cada país, no los niveles entre países.</p>
+    <p><a href="fr/" hreflang="fr" lang="fr">Version française : jachères et outarde canepetière en France</a></p>
+  </div>
 </section>
 
 <section class="bloque" id="por-que">

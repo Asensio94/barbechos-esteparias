@@ -1,0 +1,67 @@
+name: Francia (RPG)
+
+# Una pasada al año. El IGN publica el RPG de una campaña en el otoño del año siguiente
+# (la de 2025 ya estaba en la capa RPG.LATEST en octubre de 2026), así que se lanza el
+# 1 de noviembre: baja las campañas que falten y vuelve a leer la última, que aún se corrige.
+# Solo toca la parte francesa (data/fr, docs/fr); la española sigue con campana.yml.
+on:
+  schedule:
+    - cron: "0 6 1 11 *"
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "Campaña a rehacer (vacío = las que falten y la última)"
+        required: false
+      web_only:
+        description: "Solo rehacer la página con las campañas ya guardadas"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: campana
+  cancel-in-progress: false
+
+jobs:
+  francia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Estadística agrícola anual (Agreste)
+        # If Agreste is down, the CSV already in data/official is kept.
+        continue-on-error: true
+        run: python -m fallow fr-official
+
+      - name: RPG por comuna y ZPS
+        if: ${{ !inputs.web_only }}
+        env:
+          YEAR: ${{ inputs.year }}
+        run: |
+          if [ -n "$YEAR" ]; then
+            python -m fallow fr-rpg --year "$YEAR" --refresh
+          else
+            python -m fallow fr-rpg
+          fi
+
+      - name: Página
+        run: python -m fallow fr-web
+
+      - name: Guardar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data/fr data/official/fr-saa-departements.csv docs/fr
+          git diff --cached --quiet && exit 0
+          git commit -m "France: RPG ${{ inputs.year || 'campaigns' }} and page"
+          git push

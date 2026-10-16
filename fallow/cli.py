@@ -69,6 +69,27 @@ def merge(year: int) -> None:
     log.info("merged %d cells into %s (%d rows)", len(parts), f"hist/{year}.csv.gz", len(df))
 
 
+def fr_rpg(years: list[int] | None, workers: int, refresh: bool) -> None:
+    """France: download the RPG of the study departments and aggregate it by commune and SPA.
+
+    Without --year, every published campaign not yet in data/fr, plus the newest one, which
+    IGN may still correct (its tile cache is then dropped and read again)."""
+    import shutil
+
+    from .france import aggregate as fr_aggregate, rpg, wfs
+    published = sorted(wfs.rpg_layers())
+    if not years:
+        years = [y for y in published if not (config.FR_DIR / f"communes-{y}.csv").exists()]
+        if published and published[-1] not in years:
+            years.append(published[-1])
+            refresh = True
+    for y in years:
+        if refresh:
+            shutil.rmtree(config.CACHE / "rpg" / str(y), ignore_errors=True)
+        rpg.download(y, workers)
+        fr_aggregate.run(y)
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="fallow")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -83,6 +104,12 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("official", help="download and parse the official figures")
     sub.add_parser("calibrate", help="fit the thresholds on the Aragon CAP declarations")
     sub.add_parser("web", help="build docs/index.html")
+    f = sub.add_parser("fr-rpg", help="France: RPG campaigns -> data/fr (missing ones by default)")
+    f.add_argument("--year", type=int, action="append")
+    f.add_argument("--workers", type=int, default=4)
+    f.add_argument("--refresh", action="store_true", help="download again even if cached")
+    sub.add_parser("fr-official", help="France: Agreste SAA fallow by department")
+    sub.add_parser("fr-web", help="France: build docs/fr/index.html")
     a = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
 
@@ -98,6 +125,14 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "web":
         from . import web
         web.build()
+    elif a.cmd == "fr-rpg":
+        fr_rpg(a.year, a.workers, a.refresh)
+    elif a.cmd == "fr-official":
+        from .france import saa
+        saa.update()
+    elif a.cmd == "fr-web":
+        from .france import web as fr_web
+        log.info(fr_web.build())
 
 
 if __name__ == "__main__":
